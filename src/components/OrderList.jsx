@@ -1,26 +1,133 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import "../OrderList.css";
+import "../MainPage.css";
+import logo from "./logo.svg";
+import axios from "axios";
 
 const OrderList = () => {
-  return (
-    <div>
-      <h2>Order List Page</h2>
-      <Link to="/order-confirm">Sipariş Ver</Link>
-      <BoyutSecCard />
-      <HamurSecCard />
-      <EkMalzemeler />
-      <SiparisNotu />
-    </div>
-  );
-};
-
-function BoyutSecCard() {
+  const [name, setName] = useState("");
   const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedDough, setSelectedDough] = useState("");
+  const [selectedToppings, setSelectedToppings] = useState([]);
+  const [note, setNote] = useState("");
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+  useEffect(() => {
+    setIsSubmitDisabled(
+      !selectedSize ||
+        !selectedDough ||
+        name.length < 3 ||
+        selectedToppings.length < 4 ||
+        selectedToppings.length > 10
+    );
+  }, [selectedSize, selectedDough, name, selectedToppings]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // Sipariş verilerini oluştur
+    const form = {
+      name: name,
+      size: selectedSize,
+      dough: selectedDough,
+      toppings: selectedToppings,
+      note: note,
+    };
+
+    axios
+      .post("https://reqres.in/api/pizza", form)
+      .then((response) => {
+        console.log("API Response:", response.data);
+
+        // Bunu devredışı bıraktığımızda console isteklerini görebiliyoruz.
+        window.location.href = "/order-confirm";
+      })
+      .catch((error) => {
+        console.error("API Request Error:", error);
+      });
+  };
 
   const handleSizeChange = (event) => {
     setSelectedSize(event.target.value);
   };
 
+  const handleDoughChange = (event) => {
+    setSelectedDough(event.target.value);
+  };
+
+  const handleToppingChange = (event) => {
+    const topping = event.target.value;
+    if (selectedToppings.includes(topping)) {
+      setSelectedToppings(selectedToppings.filter((item) => item !== topping));
+    } else {
+      setSelectedToppings([...selectedToppings, topping]);
+    }
+  };
+
+  const handleNoteChange = (event) => {
+    setNote(event.target.value);
+  };
+
+  return (
+    <div>
+      <header className="kutu">
+        <img className="logo" src={logo} alt="logo" />
+        <h4> Anasayfa -Seçenekler- Sipariş Oluştur</h4>
+      </header>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="İsim (Minimum 3 karakter)"
+          minLength="3"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="isim"
+        />
+        <h2 className="pizzaadi">Mediterranean Delight</h2>
+        <p className="opc">
+          Mediterranean Delight, Akdeniz mutfağının eşsiz lezzetlerini bir araya
+          getiren bir pizza çeşididir. Bu nefis pizza, ince ve çıtır
+          kenarlığıyla dikkat çekerken, zengin malzeme çeşitliliğiyle damakları
+          şenlendirir. Taze cherry domatesler, dilimlenmiş zeytinler, lezzetli
+          rendelenmiş mozzarella peyniri ve fesleğen yaprakları, pizza tabanının
+          üzerini süslerken, hafif baharatlarla tatlandırılmış zeytinyağı ile
+          tamamlanır. Her ısırıkta Akdeniz'in sıcak esintisini
+          hissedebileceğiniz bu pizza, sağlıklı ve lezzetli bir seçenektir.
+          Mediterranean Delight, tüm pizza severler için bir ziyafet sunar ve
+          damaklarda unutulmaz bir lezzet bırakır.
+        </p>
+
+        <div className="card-container">
+          <BoyutSecCard
+            selectedSize={selectedSize}
+            handleSizeChange={handleSizeChange}
+          />
+          <HamurSecCard
+            selectedDough={selectedDough}
+            handleDoughChange={handleDoughChange}
+          />
+        </div>
+        <EkMalzemeler
+          selectedToppings={selectedToppings}
+          handleToppingChange={handleToppingChange}
+        />
+        <SiparisNotu note={note} handleNoteChange={handleNoteChange} />
+        <SiparisToplami selectedToppings={selectedToppings} />
+        <button
+          type="submit"
+          disabled={isSubmitDisabled}
+          className="submit-button"
+        >
+          SİPARİŞ VER
+        </button>
+      </form>
+    </div>
+  );
+};
+
+const BoyutSecCard = ({ selectedSize, handleSizeChange }) => {
   return (
     <div className="boyut-sec-card">
       <h2>Boyut Seç</h2>
@@ -60,15 +167,9 @@ function BoyutSecCard() {
       )}
     </div>
   );
-}
+};
 
-function HamurSecCard() {
-  const [selectedDough, setSelectedDough] = useState("");
-
-  const handleDoughChange = (event) => {
-    setSelectedDough(event.target.value);
-  };
-
+const HamurSecCard = ({ selectedDough, handleDoughChange }) => {
   return (
     <div className="hamur-sec-card">
       <h2>Hamur Seç</h2>
@@ -87,10 +188,9 @@ function HamurSecCard() {
       )}
     </div>
   );
-}
+};
 
-function EkMalzemeler() {
-  const [selectedToppings, setSelectedToppings] = useState([]);
+const EkMalzemeler = ({ selectedToppings, handleToppingChange }) => {
   const maxToppings = 10;
   const toppingPrice = 5;
 
@@ -111,53 +211,70 @@ function EkMalzemeler() {
     "Kabak",
   ];
 
-  const handleToppingChange = (event) => {
-    const topping = event.target.value;
-    if (selectedToppings.includes(topping)) {
-      setSelectedToppings(selectedToppings.filter((item) => item !== topping));
-    } else {
-      if (selectedToppings.length < maxToppings) {
-        setSelectedToppings([...selectedToppings, topping]);
-      } else {
-        alert("En fazla 10 malzeme seçebilirsiniz!");
-      }
-    }
-  };
+  const group1 = toppings.slice(0, 5);
+  const group2 = toppings.slice(5, 10);
+  const group3 = toppings.slice(10);
 
   return (
     <div className="ek-malzemeler">
       <h2>Ek Malzemeler</h2>
-      <div className="topping-options">
-        {toppings.map((topping, index) => (
-          <label key={index}>
-            <input
-              type="checkbox"
-              value={topping}
-              checked={selectedToppings.includes(topping)}
-              onChange={handleToppingChange}
-            />
-            {topping}
-          </label>
-        ))}
+      <h3>En az 4, en fazla 10 malzeme seçebilirsiniz. Her biri 5₺.</h3>
+      <div className="malzeme-grup">
+        <ul>
+          {group1.map((topping, index) => (
+            <li key={index}>
+              <label>
+                <input
+                  type="checkbox"
+                  value={topping}
+                  checked={selectedToppings.includes(topping)}
+                  onChange={handleToppingChange}
+                />
+                {topping}
+              </label>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="siparis-toplam">
-        <h3>Toplam</h3>
-        <p>
-          Seçimlerin Toplam Fiyatı: {selectedToppings.length * toppingPrice}₺
-        </p>
-        <p>Toplam: {selectedToppings.length * toppingPrice + 105}₺</p>
+      <div className="malzeme-grup">
+        <ul>
+          {group2.map((topping, index) => (
+            <li key={index}>
+              <label>
+                <input
+                  type="checkbox"
+                  value={topping}
+                  checked={selectedToppings.includes(topping)}
+                  onChange={handleToppingChange}
+                />
+                {topping}
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="malzeme-grup">
+        <ul>
+          {group3.map((topping, index) => (
+            <li key={index}>
+              <label>
+                <input
+                  type="checkbox"
+                  value={topping}
+                  checked={selectedToppings.includes(topping)}
+                  onChange={handleToppingChange}
+                />
+                {topping}
+              </label>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
-}
+};
 
-function SiparisNotu() {
-  const [note, setNote] = useState("");
-
-  const handleNoteChange = (event) => {
-    setNote(event.target.value);
-  };
-
+const SiparisNotu = ({ note, handleNoteChange }) => {
   return (
     <div className="siparis-notu">
       <h2>Sipariş Notu</h2>
@@ -170,6 +287,23 @@ function SiparisNotu() {
       />
     </div>
   );
-}
+};
 
+const SiparisToplami = ({ selectedToppings }) => {
+  const toppingPrice = 5;
+  const totalToppingPrice = selectedToppings.length * toppingPrice;
+  const totalPrice = totalToppingPrice + 105;
+
+  return (
+    <div className="siparis-toplami">
+      <h2>Sipariş Toplamı</h2>
+      <p>
+        Seçimlerin Toplam Fiyatı: <span>{totalToppingPrice}₺</span>
+      </p>
+      <p>
+        <span className="total-price">Toplam: {totalPrice}₺</span>
+      </p>
+    </div>
+  );
+};
 export default OrderList;

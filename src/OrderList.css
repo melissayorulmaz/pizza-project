@@ -1,0 +1,117 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.opc {
+  width: 30%; /* Paragraf genişliğini ayarla */
+  margin: 0 auto; /*
+   Yatayda merkezleme için otomatik sol ve sağ margin kullan */
+}
+.pizzaadi {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  margin-right: 340px;
+}
+
+.kutu {
+  background-color: #ce2829;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+/* logo kısmı */
+.logo {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  width: 400px;
+}
+.isim {
+  margin-top: 15px;
+  margin-left: 665px;
+}
+
+/* boyut ve hamur seçmeyi yan yana hizala */
+.card-container {
+  display: flex;
+  justify-content: center;
+}
+.boyut-sec-card {
+  width: 45%;
+}
+.hamur-sec-card {
+  width: 45%;
+}
+
+.boyut-sec-card {
+  width: 21%;
+  text-align: center; /* Kartı yatayda hizala */
+  margin-top: 50px;
+  margin-bottom: 20px;
+  margin-right: 0px; /* Sağdan 10px boşluk */
+}
+
+/* hamur seç kısmı */
+.hamur-sec-card {
+  width: 25%;
+  text-align: center; /* Kartı yatayda hizala */
+  margin-top: 50px;
+  margin-bottom: 20px;
+  margin-left: 0px; /* Soldan 10px boşluk */
+}
+
+.size-options {
+  display: flex;
+  flex-direction: column;
+}
+.size-options label {
+  margin-bottom: 10px;
+}
+
+/* ek malzemeler kısmı */
+.ek-malzemeler {
+  text-align: left;
+  margin-left: 665px;
+}
+
+.ek-malzemeler h2,
+.ek-malzemeler p {
+  text-align: left;
+}
+
+.malzeme-grup {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 30px;
+  margin-left: 10px;
+  margin-bottom: 20px; /* Kutular arasındaki dikey boşluk */
+}
+
+/* total tutar kısmı */
+.total-price {
+  color: red;
+}
+
+/* sipariş ver kısmı */
+.submit-button {
+  margin-left: 1100px;
+  background-color: #fdc913;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: black;
+  cursor: pointer;
+}
+
+.siparis-notu {
+  margin-left: 665px;
+}
+
+.siparis-toplami {
+  margin-top: 20px;
+  margin-left: 665px;
+}

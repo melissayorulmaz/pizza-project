@@ -1,0 +1,34 @@
+/*main page*/
+.main {
+  background: url("../Assets/mile1-assets/home-banner.png") center top / cover
+    no-repeat;
+  height: 100vh;
+  align-items: center;
+}
+
+.aciktim {
+  background-color: yellow;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+  color: black;
+}
+
+.main-heading {
+  color: white;
+  font-size: 28px; /* Başlık font boyutunu ayarla */
+  font-weight: bold; /* Başlık fontunu kalın yap */
+  text-align: center; /* Başlığı ortala */
+  margin-top: 200px; /* Üstten 20 piksel boşluk bırak */
+}
+
+.aciktim {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  width: fit-content; /* İçeriğe uygun genişlik */
+  padding: 8px 20px; /* İçerikle arasında biraz boşluk bırakmak için */
+}

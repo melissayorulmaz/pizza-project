@@ -1,10 +1,11 @@
 import React from "react";
+import "../Confirm.css";
 
 const OrderConfirm = () => {
   return (
-    <div>
+    <div className="confirm-container">
       <h2>TEBRİKLER!</h2>
-      <p>Siparişiniz Onaylandı!</p>
+      <h2>Siparişiniz Onaylandı!</h2>
     </div>
   );
 };
