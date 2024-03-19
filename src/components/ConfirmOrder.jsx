@@ -1,11 +1,13 @@
 import React from "react";
 import "../Confirm.css";
+import logo from "./logo.svg";
 
 const OrderConfirm = () => {
   return (
     <div className="confirm-container">
-      <h2>TEBRİKLER!</h2>
-      <h2>Siparişiniz Onaylandı!</h2>
+      <h1>TEBRİKLER!</h1>
+      <h1>SİPARİŞİNİZ ALINDI!</h1>
+      <img className="logom1" src={logo} alt="logo" />
     </div>
   );
 };

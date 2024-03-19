@@ -10,3 +10,10 @@
   align-items: center;
   font-family: "Roboto Condensed", sans-serif;
 }
+
+.logom1 {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}

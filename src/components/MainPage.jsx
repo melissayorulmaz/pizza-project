@@ -6,10 +6,13 @@ import logo from "./logo.svg";
 const MainPage = () => {
   return (
     <div className="main">
-      <img className="logo" src={logo} alt="logo" />
-      <h1 className="main-heading">Kod Acıktırır Pizza Doyurur</h1>
+      <div className="logo-p">
+        <img className="logom" src={logo} alt="logo" />
+      </div>
+      <h2 className="main-heading">KOD ACIKTIRIR</h2>
+      <h2 className="main-h">PİZZA DOYURUR</h2>
       <Link to="/order-list" className="aciktim">
-        Acıktım
+        ACIKTIM
       </Link>
     </div>
   );

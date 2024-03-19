@@ -4,6 +4,7 @@ import "../OrderList.css";
 import "../MainPage.css";
 import logo from "./logo.svg";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const OrderList = () => {
   const [name, setName] = useState("");
@@ -15,6 +16,7 @@ const OrderList = () => {
 
   useEffect(() => {
     setIsSubmitDisabled(
+      //devre dışı bırakma koşullarını sağladım
       !selectedSize ||
         !selectedDough ||
         name.length < 3 ||
@@ -23,10 +25,12 @@ const OrderList = () => {
     );
   }, [selectedSize, selectedDough, name, selectedToppings]);
 
+  const history = useHistory(); //reactrouter history özelliğini kullanarak objeyi almamızı sağladı
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Sipariş verilerini oluştur
+    // Sipariş verilerini oluşturdum
     const form = {
       name: name,
       size: selectedSize,
@@ -40,14 +44,13 @@ const OrderList = () => {
       .then((response) => {
         console.log("API Response:", response.data);
 
-        // Bunu devredışı bıraktığımızda console isteklerini görebiliyoruz.
-        window.location.href = "/order-confirm";
+        history.push("/order-confirm");
       })
       .catch((error) => {
         console.error("API Request Error:", error);
       });
   };
-
+  //yapılan seçimlere göre boyutu güncelliyor
   const handleSizeChange = (event) => {
     setSelectedSize(event.target.value);
   };
@@ -71,58 +74,65 @@ const OrderList = () => {
 
   return (
     <div>
-      <header className="kutu">
-        <img className="logo" src={logo} alt="logo" />
-        <h4> Anasayfa -Seçenekler- Sipariş Oluştur</h4>
-      </header>
+      <div className="order-container">
+        <header className="kutu">
+          <img className="logo" src={logo} alt="logo" />
+          <nav className="secenekler">
+            <a href="./."> Anasayfa </a>
+            <a href="./order-list"> Seçenekler </a>
+            <a href="./order-confirm"> Sipariş Oluştur </a>
+          </nav>
+        </header>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="İsim (Minimum 3 karakter)"
-          minLength="3"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="isim"
-        />
-        <h2 className="pizzaadi">Mediterranean Delight</h2>
-        <p className="opc">
-          Mediterranean Delight, Akdeniz mutfağının eşsiz lezzetlerini bir araya
-          getiren bir pizza çeşididir. Bu nefis pizza, ince ve çıtır
-          kenarlığıyla dikkat çekerken, zengin malzeme çeşitliliğiyle damakları
-          şenlendirir. Taze cherry domatesler, dilimlenmiş zeytinler, lezzetli
-          rendelenmiş mozzarella peyniri ve fesleğen yaprakları, pizza tabanının
-          üzerini süslerken, hafif baharatlarla tatlandırılmış zeytinyağı ile
-          tamamlanır. Her ısırıkta Akdeniz'in sıcak esintisini
-          hissedebileceğiniz bu pizza, sağlıklı ve lezzetli bir seçenektir.
-          Mediterranean Delight, tüm pizza severler için bir ziyafet sunar ve
-          damaklarda unutulmaz bir lezzet bırakır.
-        </p>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="İsim (Minimum 3 karakter)"
+            minLength="3"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="isim"
+          />
+          <h2 className="pizzaadi">Mediterranean Delight</h2>
+          <h2 className="pizzafiyati">105.00₺ </h2>
+          <p className="opc">
+            Mediterranean Delight, Akdeniz mutfağının eşsiz lezzetlerini bir
+            araya getiren bir pizza çeşididir. Bu nefis pizza, ince ve çıtır
+            kenarlığıyla dikkat çekerken, zengin malzeme çeşitliliğiyle
+            damakları şenlendirir. Taze cherry domatesler, dilimlenmiş
+            zeytinler, lezzetli rendelenmiş mozzarella peyniri ve fesleğen
+            yaprakları, pizza tabanının üzerini süslerken, hafif baharatlarla
+            tatlandırılmış zeytinyağı ile tamamlanır. Her ısırıkta Akdeniz'in
+            sıcak esintisini hissedebileceğiniz bu pizza, sağlıklı ve lezzetli
+            bir seçenektir. Mediterranean Delight, tüm pizza severler için bir
+            ziyafet sunar ve damaklarda unutulmaz bir lezzet bırakır.
+          </p>
 
-        <div className="card-container">
-          <BoyutSecCard
-            selectedSize={selectedSize}
-            handleSizeChange={handleSizeChange}
+          <div className="card-container">
+            <BoyutSecCard
+              selectedSize={selectedSize}
+              handleSizeChange={handleSizeChange}
+            />
+            <HamurSecCard
+              selectedDough={selectedDough}
+              handleDoughChange={handleDoughChange}
+            />
+          </div>
+          <EkMalzemeler
+            selectedToppings={selectedToppings}
+            handleToppingChange={handleToppingChange}
           />
-          <HamurSecCard
-            selectedDough={selectedDough}
-            handleDoughChange={handleDoughChange}
-          />
-        </div>
-        <EkMalzemeler
-          selectedToppings={selectedToppings}
-          handleToppingChange={handleToppingChange}
-        />
-        <SiparisNotu note={note} handleNoteChange={handleNoteChange} />
-        <SiparisToplami selectedToppings={selectedToppings} />
-        <button
-          type="submit"
-          disabled={isSubmitDisabled}
-          className="submit-button"
-        >
-          SİPARİŞ VER
-        </button>
-      </form>
+          <SiparisNotu note={note} handleNoteChange={handleNoteChange} />
+          <SiparisToplami selectedToppings={selectedToppings} />
+          <button
+            type="submit"
+            disabled={isSubmitDisabled}
+            className="submit-button"
+          >
+            SİPARİŞ VER
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
@@ -220,55 +230,17 @@ const EkMalzemeler = ({ selectedToppings, handleToppingChange }) => {
       <h2>Ek Malzemeler</h2>
       <h3>En az 4, en fazla 10 malzeme seçebilirsiniz. Her biri 5₺.</h3>
       <div className="malzeme-grup">
-        <ul>
-          {group1.map((topping, index) => (
-            <li key={index}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={topping}
-                  checked={selectedToppings.includes(topping)}
-                  onChange={handleToppingChange}
-                />
-                {topping}
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="malzeme-grup">
-        <ul>
-          {group2.map((topping, index) => (
-            <li key={index}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={topping}
-                  checked={selectedToppings.includes(topping)}
-                  onChange={handleToppingChange}
-                />
-                {topping}
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="malzeme-grup">
-        <ul>
-          {group3.map((topping, index) => (
-            <li key={index}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={topping}
-                  checked={selectedToppings.includes(topping)}
-                  onChange={handleToppingChange}
-                />
-                {topping}
-              </label>
-            </li>
-          ))}
-        </ul>
+        {toppings.map((topping, index) => (
+          <label key={index}>
+            <input
+              type="checkbox"
+              value={topping}
+              checked={selectedToppings.includes(topping)}
+              onChange={handleToppingChange}
+            />
+            {topping}
+          </label>
+        ))}
       </div>
     </div>
   );
